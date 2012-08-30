@@ -1,0 +1,13 @@
+.DS_STORE
+.sass-cache
+node_modules
+Gemfile.lock
+build/**
+source/app/lib/**
+source/app/build/**
+source/test/spec/lib/**
+.project
+.settings
+.pmd
+target
+npm-debug.log

@@ -1,0 +1,46 @@
+pre, code {
+  @include text-shadow( none );
+  @include border-radius( 6px );
+  @include box-shadow( darken( $dark, 8% ) 0 0 3px 0 inset );
+  font-family: courier;
+  background: $dark;
+  margin: 10px 0;
+  white-space: pre;
+  line-height: 16px;
+  color: $light;
+}
+
+pre {
+  padding: 5px 10px;
+}
+
+code {
+  padding: 2px 5px 4px 5px;
+}
+
+pre > code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  @include box-shadow( none );
+}
+
+pre {
+  overflow: auto;
+}
+
+pre::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+pre::-webkit-scrollbar-track, pre::-webkit-scrollbar-track-piece {
+  background-color: darken( $dark, 8% );
+  @include border-radius( 8px );
+}
+
+pre::-webkit-scrollbar-thumb {
+  background-color: $dark;
+  border: 2px solid darken( $dark, 8% );
+  @include border-radius( 8px );
+}

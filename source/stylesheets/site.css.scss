@@ -1,0 +1,16 @@
+
+@import "compass";
+
+@include global-reset;
+
+
+// sprites
+//$general-sprite-dimensions: true;
+
+//@import "general/*.png";
+//@include all-general-sprites;
+
+// other styles
+@import "styles/shared";
+@import "styles/highlight";
+

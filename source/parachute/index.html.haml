@@ -1,0 +1,574 @@
+- content_for :head do
+  %title Parachute Test Harness
+
+  = stylesheet_link_tag "site.css"
+  %link{ :href => "./stylesheets/screen.css", :media => "screen, projection", :rel => "stylesheet", :type => "text/css" }
+
+  %script{:charset => "utf-8", :src => "/javascripts/libs/modernizr-2.0.6.js", :type => "text/javascript"}
+  %script{:charset => "utf-8", :src => "/javascripts/libs/jquery-1.7.1.js", :type => "text/javascript"}
+  %script{:charset => "utf-8", :src => "/javascripts/libs/jquery.transform.js", :type => "text/javascript"}
+  %script{:charset => "utf-8", :src => "/javascripts/libs/jquery.add-easing.js", :type => "text/javascript"}
+  %script{:charset => "utf-8", :src => "/javascripts/libs/jquery.parachute.js", :type => "text/javascript"}
+  %script{:charset => "utf-8", :src => "/javascripts/parachute/parachute.js", :type => "text/javascript"}
+
+
+#container
+  %h1 Parachute Test Harness
+  .info
+    A series of animations in CSS3 on newer browsers with a JS animation fallback for those browsers that are lagging behind; mostly IE.
+
+  %h2 Translate (move)
+  .info
+    Hover on a demo box to see it in action.
+
+  %article
+    .hover
+    .code
+      %h3 Translate X
+      %pre
+        != "$('.box').transition({ <b>x: '90px'</b> });"
+
+    .field
+      .box{ :style => 'left: 10px; top: 10px;'}
+
+  %article
+    .hover
+    .code
+      %h3 Translate Y
+      %pre
+        != "$('.box').transition({ <b>y: '30px'</b> });"
+
+    .field
+      .box{ :style => 'left: 10px; top: 10px;'}
+
+  %article
+    .hover
+    .code
+      %h3 Translate X and Y
+      %pre
+        != "$('.box').transition({ <b>x: '200px', y: '20px'</b> });"
+
+    .field
+      .box{ :style => 'left: 10px; top: 10px;'}
+
+  %article
+    .hover
+    .code
+      %h3 Translate X and Y using 'translate'
+      %pre
+        != "$('.box').transition({ <b>translate: '200px, 20px'</b> });"
+
+    .field
+      .box{ :style => 'left: 10px; top: 10px;'}
+
+  -# ============================================================================
+  %h2 Available transformations
+  .info
+    :markdown
+      The following transformations are available.
+      Refer to the [README](https://github.com/rstacruz/jquery.transit#readme) for more information.
+  .info.more.transformations
+    :markdown
+      * x*(px)*
+      * y*(px)*
+      * translate*(x, y)*
+      * rotate*(deg)*
+      * rotateX*(deg)*
+      * rotateY*(deg)*
+      * rotate3d*(x, y, z, deg)*
+      * scale*(x, \[y\])*
+      * perspective*(px)*
+      * skewX*(deg)*
+      * skewY*(deg)*
+
+  -# ============================================================================
+  %h2 Rotation
+
+  %article
+    .hover
+    .code
+      %h3 Rotate
+      %pre
+        != "$('.box').transition({ <b>rotate: '30deg'</b> });"
+
+    .field
+      .box{ :style => 'left: 180px; top: 20px;'}
+
+  %article
+    .hover
+    .code
+      %h3 Rotate
+      %pre
+        != "$('.box').transition({ <b>rotate: '180deg', x: '100px'</b> });"
+
+    .field
+      .box{ :style => 'left: 180px; top: 20px;'}
+
+  -# ============================================================================
+  %h2 Skew
+
+  %article
+    .hover
+    .code
+      %h3 Skew X
+      %pre
+        != "$('.box').transition({ <b>skewX: '30deg'</b> });"
+
+    .field
+      .box{ :style => 'left: 180px; top: 20px;'}
+
+  %article
+    .hover
+    .code
+      %h3 Skew X + x
+      %pre
+        != "$('.box').transition({ <b>skewX: '30deg', x: '100px'</b> });"
+
+    .field
+      .box{ :style => 'left: 180px; top: 20px;'}
+
+  %article
+    .hover
+    .code
+      %h3 Skew Y
+      %pre
+        != "$('.box').transition({ <b>skewY: '30deg'</b> });"
+
+    .field
+      .box{ :style => 'left: 180px; top: 20px;'}
+
+  %article
+    .hover
+    .code
+      %h3 Skew X and Y
+      %pre
+        != "$('.box').transition({"
+        %br<>
+        != "    <b>skewX: '30deg',</b>"
+        %br<>
+        != "    <b>skewY: '-30deg'</b>"
+        %br<>
+        != "});"
+
+    .field{ :style => 'height: 150px'}
+      .box{ :style => 'left: 180px; top: 45px;'}
+
+  -# ============================================================================
+  %h2 Scale
+
+  %article
+    .hover
+    .code
+      %h3 Scale up 120% size
+      %pre
+        != "$('.box').transition({ <b>scale: 1.2</b> });"
+
+    .field
+      .box{ :style => 'left: 180px; top: 20px;'}
+
+  %article
+    .hover
+    .code
+      %h3 Scale 200% horizontally, 150% vertically
+      %pre
+        != "$('.box').transition({ <b>scale: [2, 1.5]</b> });"
+
+    .field
+      .box{ :style => 'left: 180px; top: 25px;'}
+
+  -# ============================================================================
+  %h2 Transitions for other properties
+  .info You can animate any available CSS property.
+
+  %article
+    .hover
+    .code
+      %h3 $.fn.transition for any CSS property
+      %pre
+        != "$('.box').transition({"
+        %br<>
+        != "    <b>opacity: 0,</b>"
+        %br<>
+        != "    scale: 1.6"
+        %br<>
+        != "});"
+
+    .field{ :style => 'height: 150px'}
+      .box{ :style => 'left: 180px; top: 45px;'}
+
+  %article
+    .hover
+    .code
+      %pre
+        != "$('.box').transition({"
+        %br<>
+        != "    <b>marginLeft: '20px',</b>"
+        %br<>
+        != "    <b>height: '80px'</b>"
+        %br<>
+        != "});"
+
+    .field{ :style => 'height: 130px'}
+      .box{ :style => 'left: 180px; top: 35px;'}
+
+  -# ============================================================================
+  %h2 Callbacks
+
+  .info
+    :markdown
+      $.fn.transition(*options, \[duration\], \[easing\], \[callback\]*);
+      $.fn.transition works just like $.fn.animate. You can pass a *duration*, *easing*, and *callback*.
+
+  %article
+    .hover
+    .code
+      %h3 Providing callbacks
+      %pre
+        != "$('.box').transition({ x: -100 }, <b>function() {</b>"
+        %br<>
+        != "<b>    $(this).transition({ opacity: 0 });</b>"
+        %br<>
+        != "<b>}</b>);"
+
+    .field{ :style => 'height: 150px'}
+      .box{ :style => 'left: 180px; top: 45px;'}
+
+  -# ============================================================================
+  %h2 Custom duration
+
+  %article
+    .hover
+    .code
+      %h3 Custom duration (jQuery style)
+      %pre
+        != "$('.box').transition({ opacity: 0 }, <b>'slow'</b>);"
+
+    .field{ :style => 'height: 150px'}
+      .box{ :style => 'left: 180px; top: 45px;'}
+
+  %article
+    .hover
+    .code
+      %h3 Custom duration (in milliseconds)
+      %pre
+        != "$('.box').transition({ opacity: 0 }, <b>2000</b>);"
+
+    .field{ :style => 'height: 150px'}
+      .box{ :style => 'left: 180px; top: 45px;'}
+
+  -# ============================================================================
+  %h2 Easing
+  .info
+    :markdown
+      Simply provide a third parameter to *$.fn.transition*.
+
+  %article.mini
+    .hover
+    .code
+      %h3 Linear
+      %pre
+        != "$('.box').transition({ x: 330 }, 500, <b>'linear'</b>);"
+
+    .field{ :style => 'height: 53px'}
+      .box{ :style => 'left: 10px; top: 10px; height: 30px;'}
+
+  %article.mini
+    .hover
+    .code
+      %h3 Ease
+      %pre
+        != "$('.box').transition({ x: 330 }, 500, <b>'ease'</b>);"
+
+    .field{ :style => 'height: 53px'}
+      .box{ :style => 'left: 10px; top: 10px; height: 30px;'}
+
+  %article.mini
+    .hover
+    .code
+      %h3 Ease in
+      %pre
+        != "$('.box').transition({ x: 330 }, 500, <b>'ease-in'</b>);"
+
+    .field{ :style => 'height: 53px'}
+      .box{ :style => 'left: 10px; top: 10px; height: 30px;'}
+
+
+  %article.mini.last
+    .hover
+    .code
+      %h3 Ease in-out
+      %pre
+        != "$('.box').transition({ x: 330 }, 500, <b>'ease-in-out'</b>);"
+
+    .field{ :style => 'height: 53px'}
+      .box{ :style => 'left: 10px; top: 10px; height: 30px;'}
+
+  -# ============================================================================
+  %h2 Delay
+
+  %article
+    .hover
+    .code
+      %h3 Delay by 400ms
+      %pre
+        != "$('.box').transition({ x: -100, <b>delay: 400</b> });"
+
+    .field{ :style => 'height: 150px'}
+      .box{ :style => 'left: 180px; top: 45px;'}
+
+  -# ============================================================================
+  %h2 Alternate easing/duration syntax
+
+  .info
+    :markdown
+      You can provide *easing* and *duration* in the options instead
+      Great for CoffeeScript.
+
+  %article
+    .hover
+    .code
+      %pre
+        != "$('.box').transition({"
+        %br<>
+        != "    x: '100px',"
+        %br<>
+        != "    <b>easing: 'ease-in',</b>"
+        %br<>
+        != "    <b>duration: '2000ms'</b>"
+        %br<>
+        != "});"
+
+    .field{ :style => 'height: 150px'}
+      .box{ :style => 'left: 180px; top: 45px;'}
+
+  -# ============================================================================
+  %h2 Optional units
+
+  .info
+    :markdown
+      All units (*px*, *deg*, *ms*, etc) are optional.
+
+  %article
+    .hover
+    .code
+      %pre
+        != "$('.box').transition({"
+        %br<>
+        != "    x: <b>100</b>,"
+        %br<>
+        != "    duration: <b>2000</b>,"
+        %br<>
+        != "    rotate: <b>30</b>,"
+        %br<>
+        != "    easing: 'ease-in'"
+        %br<>
+        != "});"
+
+    .field{ :style => 'height: 150px'}
+      .box{ :style => 'left: 180px; top: 45px;'}
+
+  -# ============================================================================
+  %h2 Relative units
+
+  .info
+    :markdown
+      jQuery-style relative units are supported. Start your values with either *+=* or *-=*.
+
+  %article
+    .hover
+    .code
+      %pre
+        != "$('.box').transition({"
+        %br<>
+        != "    rotate: <b>'+=30deg'</b>,"
+        %br<>
+        != "    x: <b>'+=30'</b>"
+        %br<>
+        != "});"
+
+    .field{ :style => 'height: 150px'}
+      .box{ :style => 'left: 180px; top: 45px;'}
+
+
+  -# ============================================================================
+  %h2 $.fn.css
+  .info
+    :markdown
+      CSS3 transform properties work with *$.fn.css* as well.
+
+  %article
+    .hover
+    .code
+      %pre
+        != "$('.box').<b>css({</b>"
+        %br<>
+        != "    <b>x: '90px'</b>,"
+        %br<>
+        != "    <b>y: '10px'</b>,"
+        %br<>
+        != "    <b>rotate: '-10deg'</b>"
+        %br<>
+        != "<b>}</b>)</b>;"
+
+    .field{ :style => 'height: 150px'}
+      .box{ :style => 'left: 10px; top: 10px'}
+
+  %article
+    .hover
+    .code
+      %h3 Transform (automatically adds vendor prefixes)
+      %pre
+        != "$('.box').css({ <b>transform: 'rotate(40deg)'</b> });"
+
+    .field
+      .box{ :style => 'left: 10px; top: 10px;'}
+
+  %article
+    .code
+      %h3 Getting values
+      %pre
+        != "$('.box').css({ rotate: '40deg' });"
+        %br<>
+        != "alert($('.box').<b>css('rotate')</b>);"
+        %br<>
+        != "alert($('.box').<b>css('transform')</b>);"
+      %button Run
+
+    .field{ :style => 'height: 150px'}
+      .box{ :style => 'left: 10px; top: 10px;'}
+
+  -# ============================================================================
+  %h2 Setting transform origins
+  .info
+    :markdown
+      You can provide transformation origins via *$.fn.css*. The format is
+      *"x y"*, where *x* and *y* are coordinates in the given element.
+
+  %article
+    .hover
+    .code
+      %pre
+        != "$('.box').css({ <b>transformOrigin: '10px 10px'</b> });"
+        %br<>
+        != "$('.box').transition({ rotate: 40, scale: 1.2 });"
+
+    .field
+      .box{ :style => 'left: 10px; top: 10px;'}
+
+  -# ============================================================================
+  %h2 Chaining / effect queue
+  .info
+
+    :markdown
+      Transit uses jQuery's [effect queue](http://api.jquery.com/queue/) by default,
+      exactly like *$.fn.animate*. This means that transitions will never
+      run in parallel.
+
+  %article
+    .hover
+    .code
+      %pre
+        != "$('.box')."
+        %br<>
+        != "    transition({ x: '-40px' }, 250)."
+        %br<>
+        != "    transition({ x: '0px' }, 250)."
+        %br<>
+        != "    transition({ y: '-40px' }, 250)."
+        %br<>
+        != "    transition({ y: '0px' }, 250);"
+
+    .field{ :style => 'height: 150px; overflow: hidden;'}
+      .box{ :style => 'left: 180px; top: 45px;'}
+
+  -# ============================================================================
+  %h2 Transitioning from one style to another
+  .info
+
+    :markdown
+      You can chain *css* and *transition* together (*.css({ .. }).transition({ .. })*).
+
+  %article
+    .hover
+    .code
+      %pre
+        != "$('.box')."
+        %br<>
+        != "    css({ x: '-800px' })."
+        %br<>
+        != "    transition({ x: 0 });"
+
+    .field{ :style => 'height: 150px; overflow: hidden;'}
+      .box{ :style => 'left: 10px; top: 10px; width: 380px; height: 130px;'}
+
+  -# ============================================================================
+  %h2 Browser support
+  .info
+    :markdown
+      - IE *10+*
+      - Firefox *4+*
+      - Safari *5+*
+      - Chrome *10+*
+      - Opera *11+*
+      - Mobile Safari
+
+  .more.info
+    :markdown
+
+      See [caniuse.com's report](http://caniuse.com/#search=transition) on CSS transitions.
+      To support Mobile Safari, jQuery Transit uses *translate3d* and *scale3d*.
+
+  -# ============================================================================
+  %h2 What about older browsers?
+  .more.info
+    :markdown
+
+      jQuery Transit degrades older browsers by simply not doing the
+      transformations (*rotate*, *scale*, etc) while still doing standard CSS
+      (*opacity*, *marginLeft*, etc) without any animation.
+      Delays and durations will be ignored.
+
+  -# ============================================================================
+  %h2 Fallback to frame-based animation
+  .more.info
+
+    :markdown
+      If you would like to fallback to classic animation when transitions
+      aren't supported
+      (usually not recommended, may be slow):
+
+    %pre
+      != "<b>// Delegate .transition() calls to .animate()</b>"
+      %br<>
+      != "<b>// if the browser can't do CSS transitions.</b>"
+      %br<>
+      = "if (!$.support.transition)"
+      %br<>
+      = "    $.fn.transition = $.fn.animate;"
+
+  -# ============================================================================
+  %h2 Setting defaults
+  .more.info
+
+    %pre
+      != "<b>// Transit uses the same default as $.fn.animate.</b>"
+      %br<>
+      != "$.fx.speeds._default = 300;"
+
+    %pre
+      != "<b>// Default easing is stored in $.cssEase.</b>"
+      %br<>
+      = "$.cssEase._default = 'easing';"
+
+  -# ============================================================================
+  %h2 Custom easing
+  .more.info
+    :markdown
+      Define custom easing aliases in *$.cssEase*.
+
+    %pre
+      != "$.cssEase['bounce'] = 'cubic-bezier(0,1,0.5,1.3)';"
+      %br<>
+      != "$('.box').transition({ x: 0 }, 500, <b>'bounce'</b>);"
+
+

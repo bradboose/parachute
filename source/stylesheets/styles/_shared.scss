@@ -1,0 +1,53 @@
+
+
+// colors
+
+$white: #FEFFFE;
+$black: #000000;
+$grey: #989898;
+$blue: #556270;
+$red: #e31b23;
+$dark: #262B32;
+$light: #F9F9F9;
+$yellow: #C7F464;
+$aqua: #4ECDC4;
+
+// need more colors?
+// http://www.colourlovers.com/palette/1930/cheer_up_emo_kid
+
+// dimensions
+$width: 100%;
+
+// fonts
+$font-family: verdana, tahoma, sans-serif;
+$font-family-bold: verdana, tahoma, sans-serif;
+
+
+body {
+  font-family: $font-family;
+  color: #333;
+  background: url('../images/texture-bkgd.png') repeat;
+}
+
+strong {
+  font-weight: bold;
+}
+
+em {
+  font-style: italic;
+}
+
+a {
+  @include unstyled-link;
+  border-bottom: 1px dotted;
+  &:hover {
+    border-bottom: 1px solid;
+  }
+}
+
+// shared
+.wrapper {
+  padding: 10px 50px 0 50px;
+  margin: auto;
+}
+
