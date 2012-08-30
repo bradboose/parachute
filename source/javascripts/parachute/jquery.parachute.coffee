@@ -23,6 +23,7 @@
           self
 
     rotateInPlace: (degree, duration) ->
+      #TODO: determine best number of rotates per animation - currently 10
       setTimeout =>
         if $(@$elem).attr("data-rotate-percent")?
           percent = parseFloat($(@$elem).attr("data-rotate-percent"))
@@ -37,9 +38,9 @@
         else
           $(@$elem).attr("data-rotate-percent", '.1')
       , duration / 20, true
-      #TODO: determine best number of rotates per animation
 
     skewInPlace: (skewX, skewY, duration) ->
+      #TODO: determine best number of skews per animation - currently 10
       setTimeout =>
         if $(@$elem).attr("data-skew-percent")?
           percent = parseFloat($(@$elem).attr("data-skew-percent"))
@@ -54,7 +55,6 @@
         else
           $(@$elem).attr("data-skew-percent", '.1')
       , duration / 20, true
-      #TODO: determine best number of skews per animation
 
     animate: (callback) ->
       if JSON?
@@ -83,6 +83,7 @@
 
       $(@$elem).delay(@delay).animate(@animation, options)
 
+      # if only transforms, can't use step function to animate
       if @hasOnlyTransforms @animation, @transformationsList
         if rotation?
           @rotateInPlace rotation, @duration
@@ -109,23 +110,23 @@
 
       rotation = $(@).attr("data-rotation") if $(@).attr("data-rotation")? and parseInt($(@).attr("data-rotation")) isnt 0
       skewX = $(@).attr("data-skewX") if $(@).attr("data-skewX")? and parseInt($(@).attr("data-skewX")) isnt 0
-      skewY = $(@).attr("data-skewY") if $(@).attr("data-skewY")? and parseInt($(@).attr("data-skewY")) isnt 0
 
-      #if skewX?
-        #console.log "skewing: #{(skewX * percent)/5}deg"
-        #$(@).transform {"skewX": "#{(skewX * percent)/5deg"}
-        #$(@).animateTransform {"skewX": "#{(skewX * percent)/5}deg", "scaleY": 1}
+      if $(@).attr("data-skewX")? and parseInt($(@).attr("data-skewX")) isnt 0
+        skewX = $(@).attr("data-skewX")
+      else
+        skewX = 0
 
-      #if skewY?
-        #$(@).transform {"skewY": "#{skewY * percent}deg"}
-        #$(@).animateTransform {"skewY": "#{skewY * percent}deg", "scaleX": 1}
+      if $(@).attr("data-skewY")? and parseInt($(@).attr("data-skewY")) isnt 0
+        skewY = $(@).attr("data-skewY")
+      else
+        skewY = 0
 
-      #if skewX isnt 0
-        #$(@).transform {"skewX": "#{skewX * percent}deg", "skewY": "#{skewY * percent}deg"}
-        #$(@).animateTransform {"skewX": "#{skewX * percent}deg", "skewY": "#{skewY * percent}deg"}
-      #else if skewY isnt 0
-        #$(@).transform {"skewX": "#{skewX * percent}deg", "skewY": "#{skewY * percent}deg"}
-        #$(@).animateTransform {"skewX": "#{skewX * percent}deg", "skewY": "#{skewY * percent}deg"}
+      if skewX isnt 0
+        $(@).transform {"skewX": "#{skewX * percent}deg", "skewY": "#{skewY * percent}deg"}
+        $(@).animateTransform {"skewX": "#{skewX * percent}deg", "skewY": "#{skewY * percent}deg"}
+      else if skewY isnt 0
+        $(@).transform {"skewX": "#{skewX * percent}deg", "skewY": "#{skewY * percent}deg"}
+        $(@).animateTransform {"skewX": "#{skewX * percent}deg", "skewY": "#{skewY * percent}deg"}
 
       if rotation?
 
@@ -176,14 +177,14 @@
             oObj.filters.item(0).M21 = sintheta
             oObj.filters.item(0).M22 = costheta
           catch error
-            console?.log "rotate error: #{error.message}"
+            console?.log "rotate error: #{error.message}" if debugMode
       else
         oObj.setAttribute "style", "position:absolute; -moz-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -webkit-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -o-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0);"
 
       distanceHeight = Math.min($(oObj).parent().outerWidth(), $(oObj).parent().outerHeight()) / 2
 
-      $(oObj).css('top', (costheta * distanceHeight / 2) - (parseInt($(oObj).outerHeight()) / 2) + 20)
-      $(oObj).css('left', (costheta * distanceHeight / 2) - (parseInt($(oObj).outerWidth()) / 2) + 180)
+      $(oObj).css('top', (costheta * distanceHeight / 2) - (parseInt($(oObj).outerHeight()) / 2) + beforeTop)
+      $(oObj).css('left', (costheta * distanceHeight / 2) - (parseInt($(oObj).outerWidth()) / 2) + beforeLeft)
 
 
     skew: (degreesX, degreesY, percent = 1)->
@@ -247,11 +248,13 @@
           value = value.replace /\-\=/, '-'
         value
 
-      transforms.rotate = stripPrefix transforms.rotate if transforms.rotate?
-      transforms.x = stripPrefix transforms.x if transforms.x?
-      transforms.y = stripPrefix transforms.y if transforms.y?
-      transforms.skewX = stripPrefix transforms.skewX if transforms.skewX?
-      transforms.skewY = stripPrefix transforms.skewY if transforms.skewY?
+      transforms[key] = stripPrefix val for key, val of transforms when typeof(val) is "string"
+
+      transforms
+
+    translateTransforms: (boxModel, transforms) ->
+
+      transforms = @convertRelativeUnits transforms
 
       if $(@$elem).attr("data-rotation")? and transforms.rotate?
         transforms.rotate = parseInt($(@$elem).attr("data-rotation")) + parseInt(transforms.rotate)
@@ -261,12 +264,6 @@
 
       if $(@$elem).attr("data-skewY")? and transforms.skewY?
         transforms.skewY = parseInt($(@$elem).attr("data-skewY")) + parseInt(transforms.skewY)
-
-      transforms
-
-    translateTransforms: (boxModel, transforms) ->
-
-      transforms = @convertRelativeUnits transforms
 
       animations = {}
       boxModel[key] = parseInt(val) for key, val of boxModel when typeof(val) is "string"
