@@ -18,7 +18,6 @@
       self = @
       @translateAnimation ->
         self.animate ->
-          console?.log "animation complete" if debugMode
           if typeof callback is 'function'
             callback?.apply? $elem
           self
@@ -38,9 +37,9 @@
         else
           $(@$elem).attr("data-rotate-percent", '.1')
       , duration / 20, true
+      #TODO: determine best number of rotates per animation
 
     skewInPlace: (skewX, skewY, duration) ->
-
       setTimeout =>
         if $(@$elem).attr("data-skew-percent")?
           percent = parseFloat($(@$elem).attr("data-skew-percent"))
@@ -55,6 +54,7 @@
         else
           $(@$elem).attr("data-skew-percent", '.1')
       , duration / 20, true
+      #TODO: determine best number of skews per animation
 
     animate: (callback) ->
       if JSON?
@@ -94,6 +94,7 @@
 
       callback?()
 
+    # TODO: best determine if only transforms are being animated
     hasOnlyTransforms: (obj, props) ->
       iHaz = true
       if obj.left?
@@ -101,17 +102,6 @@
       if obj.top?
         iHaz = false
       iHaz
-
-    #$.cssHooks.transform =
-      #get: (elem) ->
-        #$(elem).data "transform"
-
-      #set: (elem, v) ->
-        #rotation = v.match("rotate\\((.*)\\)")
-        #if rotation.length > 1
-          #setRotation elem, parseInt(rotation[1])
-          #$(elem).attr "data-rotation", parseInt(rotation[1])
-          #console.log "ROTATE #{parseInt(rotation[1])}"
 
     stepFunction: (now, fx) ->
 
@@ -138,6 +128,8 @@
         #$(@).animateTransform {"skewX": "#{skewX * percent}deg", "skewY": "#{skewY * percent}deg"}
 
       if rotation?
+
+        #TODO: call @setRotation instead of code below - having trouble accessing within step function :(
         beforeLeft = $(@).css('left')
         beforeTop = $(@).css('top')
 
@@ -164,12 +156,9 @@
         $(@).css('left', beforeLeft)
         $(@).css('top', beforeTop)
 
-      console.log "#{percent}%" if debugMode
-
     setRotation: (oObj, deg) ->
       beforeLeft = 180
       beforeTop = 20
-      #console.log "BEFORE LEFT: {#{beforeLeft}"
 
       deg2radians = Math.PI * 2 / 360
       rad = deg * deg2radians
@@ -191,45 +180,11 @@
       else
         oObj.setAttribute "style", "position:absolute; -moz-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -webkit-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -o-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0);"
 
-      #dis = Math.min($(oObj).width(), $(oObj).height()) / 2
+      distanceHeight = Math.min($(oObj).parent().outerWidth(), $(oObj).parent().outerHeight()) / 2
 
+      $(oObj).css('top', (costheta * distanceHeight / 2) - (parseInt($(oObj).outerHeight()) / 2) + 20)
+      $(oObj).css('left', (costheta * distanceHeight / 2) - (parseInt($(oObj).outerWidth()) / 2) + 180)
 
-
-      #rad = deg * Math.PI / 180
-      #rad %= 2 * Math.PI
-      #if rad < 0
-        #rad += 2 * Math.PI
-      #rad %= Math.PI;
-      #if rad > Math.PI / 2
-        #rad = Math.PI - rad
-
-      #cos = Math.cos(rad)
-      #sin = Math.sin(-rad)
-
-      #top_fix = ($(oObj).outerHeight() - $(oObj).height() * cos + $(oObj).width() * sin)/2
-      #left_fix = ($(oObj).width() - $(oObj).width() * cos + $(oObj).height() * sin)/2
-
-      disW = Math.min($(oObj).parent().outerWidth(), $(oObj).parent().outerHeight()) / 2
-      disH = Math.min($(oObj).parent().outerWidth(), $(oObj).parent().outerHeight()) / 2
-      console?.log
-
-      $(oObj).css('top', (costheta * disH / 2) - (parseInt($(oObj).outerHeight()) / 2) + 20)
-      $(oObj).css('left', (costheta * disH / 2) - (parseInt($(oObj).outerWidth()) / 2) + 180)
-
-
-
-
-
-
-      #$(oObj).css('top': -(oObj.offsetWidth/2) + (oObj.clientWidth/2))
-
-      #console.log "#{(costheta * dis / 2) - (parseInt($(oObj).width()) / 2)} + #{beforeLeft}"
-      #$(oObj).css('left': ((costheta * dis / 2) - (parseInt($(oObj).width()) / 2)) + parseInt(beforeLeft))
-      #$(oObj).css('top': ((sintheta * dis / 2) - (parseInt($(oObj).height()) / 2)) + parseInt(beforeTop))
-      #console.log "SETTING TO: #{(costheta * dis / 2) - (parseInt($(oObj).width()) / 2)} + #{beforeLeft}"
-
-      #$(oObj).css('left', beforeLeft)
-      #$(oObj).css('top', beforeTop)
 
     skew: (degreesX, degreesY, percent = 1)->
 
@@ -349,10 +304,7 @@
       animations.left += transforms.x if transforms.x?
       animations.top += transforms.y if transforms.y?
 
-      animations.skewX = 0
       animations.skewX = transforms.skewX if transforms.skewX?
-
-      animations.skewY = 0
       animations.skewY = transforms.skewY if transforms.skewY?
 
       # If scaled X, add width and update left property
