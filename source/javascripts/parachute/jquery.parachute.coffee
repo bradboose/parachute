@@ -16,17 +16,14 @@
 
     init: (@animation, @$elem, @callback) ->
       self = @
-      setTimeout =>
-        @translateAnimation ->
-          self.animate ->
-            console?.log "animation complete" if debugMode
-            if typeof callback is 'function'
-              callback?.apply? $elem
-            self
-      , 0, true
+      @translateAnimation ->
+        self.animate ->
+          console?.log "animation complete" if debugMode
+          if typeof callback is 'function'
+            callback?.apply? $elem
+          self
 
     rotateInPlace: (degree, duration) ->
-
       setTimeout =>
         if $(@$elem).attr("data-rotate-percent")?
           percent = parseFloat($(@$elem).attr("data-rotate-percent"))
@@ -61,7 +58,7 @@
 
     animate: (callback) ->
       if JSON?
-        console?.log "animating the following! #{JSON.stringify(@animation)}" if debugMode
+        console?.log "animating: #{JSON.stringify(@animation)}" if debugMode
 
       skewX = 0
       skewY = 0
@@ -170,8 +167,8 @@
       console.log "#{percent}%" if debugMode
 
     setRotation: (oObj, deg) ->
-      beforeLeft = $(oObj).css('left')
-      beforeTop = $(oObj).css('top')
+      beforeLeft = 180
+      beforeTop = 20
       #console.log "BEFORE LEFT: {#{beforeLeft}"
 
       deg2radians = Math.PI * 2 / 360
@@ -198,22 +195,29 @@
 
 
 
-      rad = deg * Math.PI / 180
-      rad %= 2 * Math.PI
-      if rad < 0
-        rad += 2 * Math.PI
-      rad %= Math.PI;
-      if rad > Math.PI / 2
-        rad = Math.PI - rad
+      #rad = deg * Math.PI / 180
+      #rad %= 2 * Math.PI
+      #if rad < 0
+        #rad += 2 * Math.PI
+      #rad %= Math.PI;
+      #if rad > Math.PI / 2
+        #rad = Math.PI - rad
 
-      cos = Math.cos(rad)
-      sin = Math.sin(-rad)
+      #cos = Math.cos(rad)
+      #sin = Math.sin(-rad)
 
-      top_fix = ($(oObj).height() - $(oObj).height() * cos + $(oObj).width() * sin)/2
-      left_fix = ($(oObj).width() - $(oObj).width() * cos + $(oObj).height() * sin)/2
+      #top_fix = ($(oObj).outerHeight() - $(oObj).height() * cos + $(oObj).width() * sin)/2
+      #left_fix = ($(oObj).width() - $(oObj).width() * cos + $(oObj).height() * sin)/2
 
-      $(oObj).css('top', top_fix + beforeTop)
-      #$(oObj).css('left', left_fix + beforeLeft)
+      disW = Math.min($(oObj).parent().outerWidth(), $(oObj).parent().outerHeight()) / 2
+      disH = Math.min($(oObj).parent().outerWidth(), $(oObj).parent().outerHeight()) / 2
+      console?.log
+
+      $(oObj).css('top', (costheta * disH / 2) - (parseInt($(oObj).outerHeight()) / 2) + 20)
+      $(oObj).css('left', (costheta * disH / 2) - (parseInt($(oObj).outerWidth()) / 2) + 180)
+
+
+
 
 
 
@@ -234,6 +238,17 @@
 
       $(@$elem).transform {"skewX": "#{degreesX * percent}deg", "skewY": "#{degreesY * percent}deg"}
       $(@$elem).animateTransform {"skewX": "#{degreesX * percent}deg", "skewY": "#{degreesY * percent}deg"}
+
+      deg2radians = Math.PI * 2 / 360
+      rad = degreesX * deg2radians
+      costheta = Math.cos(rad)
+
+      disW = Math.min($(@$elem).parent().outerWidth(), $(@$elem).parent().outerHeight()) / 2
+      disH = Math.min($(@$elem).parent().outerWidth(), $(@$elem).parent().outerHeight()) / 2
+      console?.log
+
+      #$(oObj).css('top', (costheta * disH / 2) - (parseInt($(oObj).outerHeight()) / 2) + 20)
+      $(@$elem).css('left', (costheta * disH / 2) - (parseInt($(@$elem).outerWidth()) / 2) + 180)
 
       $(@$elem).css('left', beforeLeft)
       $(@$elem).css('top', beforeTop)
