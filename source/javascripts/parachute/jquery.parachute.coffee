@@ -10,7 +10,6 @@
   window.jQueryParachuteObject = class jQueryParachuteObject
 
     constructor: () ->
-
       @boxModelList = ["top","right","bottom","left","margin-top","margin-right","margin-bottom","margin-left","padding-top","padding-right","padding-bottom","padding-left","width","height"]
       @transformationsList = ["x","y","translate","rotate","rotateX","rotateY","rotate3d","scale","perspective","skewX","skewY","opacity"]
 
@@ -158,8 +157,19 @@
         $(@).css('top', beforeTop)
 
     setRotation: (oObj, deg) ->
-      beforeLeft = 180
-      beforeTop = 20
+
+      if $(@$elem).attr("data-rotation-left")?
+        beforeLeft = parseInt($(oObj).attr("data-rotation-left"))
+      else
+        beforeLeft = parseInt($(oObj).css('left'))
+
+      if $(@$elem).attr("data-rotation-top")?
+        beforeTop = parseInt($(oObj).attr("data-rotation-top"))
+      else
+        beforeTop = parseInt($(oObj).css('top'))
+
+      $(oObj).attr("data-rotation-left", beforeLeft)
+      $(oObj).attr("data-rotation-top", beforeTop)
 
       deg2radians = Math.PI * 2 / 360
       rad = deg * deg2radians
