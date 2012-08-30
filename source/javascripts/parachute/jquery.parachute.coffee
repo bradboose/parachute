@@ -205,17 +205,6 @@
       $(@$elem).transform {"skewX": "#{degreesX * percent}deg", "skewY": "#{degreesY * percent}deg"}
       $(@$elem).animateTransform {"skewX": "#{degreesX * percent}deg", "skewY": "#{degreesY * percent}deg"}
 
-      deg2radians = Math.PI * 2 / 360
-      rad = degreesX * deg2radians
-      costheta = Math.cos(rad)
-
-      disW = Math.min($(@$elem).parent().outerWidth(), $(@$elem).parent().outerHeight()) / 2
-      disH = Math.min($(@$elem).parent().outerWidth(), $(@$elem).parent().outerHeight()) / 2
-      console?.log
-
-      #$(oObj).css('top', (costheta * disH / 2) - (parseInt($(oObj).outerHeight()) / 2) + 20)
-      $(@$elem).css('left', (costheta * disH / 2) - (parseInt($(@$elem).outerWidth()) / 2) + 180)
-
       $(@$elem).css('left', beforeLeft)
       $(@$elem).css('top', beforeTop)
 
