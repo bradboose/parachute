@@ -1,12 +1,12 @@
 #Parachute
 
-Parachute is a javascript plugin which allows for graceful CSS3 tranformations in non webkit browsers, notabably IE7 and IE8.  It is meant to be used alongside of transit.js and employs the same syntax.  Both transit and parachute use jQuery's syntax for animation, but replace '$(elem).animate{...}' with '$(elem).transition{...}'
+Parachute is a javascript plugin which allows for gracefully degraded jQuery tranformations in non webkit browsers, notabably IE7 and IE8.  It is meant to be used alongside of transit.js and employs the same syntax.  Both transit and parachute use jQuery's syntax for animation, replacing '$(elem).animate{...}' with '$(elem).transition{...}'
 
 By including both transit and parachute in your application, your animations/transforms will upgrade to CSS3 in webkit browsers (transit) and emulate transitions as best as psossible using for non webkit browser (parachute).
 
 ##This project contains the following:
 
-- jquery.parachute.js file for IE transform animation fallbacks
+- dist/jquery.parachute.js
 - A test app demonstrating the animations supported by parachute
 
 ##Requirements for parachute
@@ -19,8 +19,8 @@ By including both transit and parachute in your application, your animations/tra
 ##Instructions
 
 - Add dist/jquery.parachute.min.js to your page
-- Add the js libraries transform.js and add-easing.js
-- Add transit for full browser capability coverage
+- Add the js libraries transform.js and add-easing.js (see below to download latest versions)
+- Add transit for full browser capability coverage if desired
 
 ##Notes
 
