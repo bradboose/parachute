@@ -15,7 +15,7 @@
 #container
   %h1 Parachute
   .info
-    A series of transition/animation fallbacks for non webkit browsers (mostly IE) meant to emulate CSS3 transform animations. Intendedto be used alongside of transit.js
+    A series of transition/animation fallbacks for non webkit browsers (mostly IE) meant to emulate CSS3 transform animations. Intended to be used alongside of transit.js
 
   %h2 Translate (move)
   .info
@@ -386,53 +386,6 @@
       .box{ :style => 'left: 180px; top: 45px;'}
 
 
-  -# ============================================================================
-  %h2 $.fn.css
-  .info
-    :markdown
-      CSS3 transform properties work with *$.fn.css* as well.
-
-  %article
-    .hover
-    .code
-      %pre
-        != "$('.box').<b>css({</b>"
-        %br<>
-        != "    <b>x: '90px'</b>,"
-        %br<>
-        != "    <b>y: '10px'</b>,"
-        %br<>
-        != "    <b>rotate: '-10deg'</b>"
-        %br<>
-        != "<b>}</b>)</b>;"
-
-    .field{ :style => 'height: 150px'}
-      .box{ :style => 'left: 10px; top: 10px'}
-
-  %article
-    .hover
-    .code
-      %h3 Transform (automatically adds vendor prefixes)
-      %pre
-        != "$('.box').css({ <b>transform: 'rotate(40deg)'</b> });"
-
-    .field
-      .box{ :style => 'left: 10px; top: 10px;'}
-
-  %article
-    .code
-      %h3 Getting values
-      %pre
-        != "$('.box').css({ rotate: '40deg' });"
-        %br<>
-        != "alert($('.box').<b>css('rotate')</b>);"
-        %br<>
-        != "alert($('.box').<b>css('transform')</b>);"
-      %button Run
-
-    .field{ :style => 'height: 150px'}
-      .box{ :style => 'left: 10px; top: 10px;'}
-
 
   -# ============================================================================
   %h2 Browser support
@@ -440,17 +393,6 @@
     :markdown
       - IE *7+*
       - IE *8+*
-
-  -# ============================================================================
-  %h2 What about older browsers?
-  .more.info
-    :markdown
-
-      jQuery Transit degrades older browsers by simply not doing the
-      transformations (*rotate*, *scale*, etc) while still doing standard CSS
-      (*opacity*, *marginLeft*, etc) without any animation.
-      Delays and durations will be ignored.
-
 
   -# ============================================================================
   %h2 Setting defaults

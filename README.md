@@ -19,6 +19,7 @@ By including both transit and parachute in your application, your animations/tra
 ##Instructions
 
 - Add dist/jquery.parachute.min.js to your page
+- Add add-easing.js from /source/javascripts/lib
 - Add the js libraries transform.js and add-easing.js (see below to download latest versions)
 - Add transit for full browser capability coverage if desired
 
