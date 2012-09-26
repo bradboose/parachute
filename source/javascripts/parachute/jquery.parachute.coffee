@@ -1,6 +1,6 @@
 ((factory) ->
   if typeof define is "function" and define.amd
-    define ["jquery", "jquery-add-easing"], factory
+    define ["jquery"], factory
   else
     factory(jQuery)
 ) ($) ->
@@ -8,6 +8,67 @@
   window.debugMode = document.location.hash.match(/debug/) and console?
 
   window.jQueryParachuteObject = class jQueryParachuteObject
+
+    # Easing object
+    easing =
+      "linear": [0, 0, 1, 1]
+      "ease": [0.25, 0.1, 0.25, 1]
+      "ease-in": [0.42, 0, 1, 1]
+      "ease-out": [0, 0, 0.58, 1]
+      "ease-in-out": [0.42, 0, 0.58, 1]
+
+    # Add Easing function
+    addEasing = (str) ->
+      fn = $.easing[str]
+      name = undefined
+      coords = undefined
+      l = undefined
+
+      # Return the cached function if it exists.
+      return fn if fn
+
+      # Get the standard easing function if it's defined.
+      if easing[str]
+        name = str
+        coords = easing[str]
+        str = "cubic-bezier(" + coords.join(", ") + ")"
+
+      # Else assume this is a cubic-bezier. It must be.
+      else
+        coords = str.match(/\d*\.?\d+/g)
+        l = coords.length # Should be 4
+        coords[l] = parseFloat(coords[l]) while l--
+
+      fn = makeBezier.apply(this, coords)
+      $.easing[str] = fn
+      $.easing[name] = fn if name
+      fn
+
+    makeBezier = (x1, y1, x2, y2) ->
+      (t) ->
+
+        # Extract X (which is equal to time here)
+        f0 = 1 - 3 * x2 + 3 * x1
+        f1 = 3 * x2 - 6 * x1
+        f2 = 3 * x1
+        refinedT = t
+        i = undefined
+        refinedT2 = undefined
+        refinedT3 = undefined
+        x = undefined
+        slope = undefined
+        i = 0
+        while i < 5
+          refinedT2 = refinedT * refinedT
+          refinedT3 = refinedT2 * refinedT
+          x = f0 * refinedT3 + f1 * refinedT2 + f2 * refinedT
+          slope = 1.0 / (3.0 * f0 * refinedT2 + 2.0 * f1 * refinedT + f2)
+          refinedT -= (x - t) * slope
+          refinedT = Math.min(1, Math.max(0, refinedT))
+          i++
+        3 * Math.pow(1 - refinedT, 2) * refinedT * y1 + 3 * (1 - refinedT) * Math.pow(refinedT, 2) * y2 + Math.pow(refinedT, 3)
+
+    $.addEasing = addEasing;
 
     constructor: () ->
       @boxModelList = ["top","right","bottom","left","margin-top","margin-right","margin-bottom","margin-left","padding-top","padding-right","padding-bottom","padding-left","width","height"]
@@ -22,37 +83,50 @@
           self
 
     rotateInPlace: (degree, duration) ->
-      #TODO: determine best number of rotates per animation - currently 10
+
+      # TODO: determine best number of rotates per animation - currently 10 -
+      # and reasonable timeout duration
+
+      numRotations = 10
+      percentageIncrement = 1 / numRotations
+
       setTimeout =>
+
         if $(@$elem).attr("data-rotate-percent")?
           percent = parseFloat($(@$elem).attr("data-rotate-percent"))
         else
-          percent = 0.1
+          percent = 1 / numRotations
 
         @setRotation @$elem, degree * parseFloat(percent)
 
         if percent < 1
-          $(@$elem).attr("data-rotate-percent", percent + 0.1)
+          $(@$elem).attr("data-rotate-percent", percent + percentageIncrement)
           @rotateInPlace degree, duration
         else
-          $(@$elem).attr("data-rotate-percent", '.1')
+          $(@$elem).attr("data-rotate-percent", "#{percentageIncrement}")
       , duration / 20, true
 
     skewInPlace: (skewX, skewY, duration) ->
-      #TODO: determine best number of skews per animation - currently 10
+
+      # TODO: determine best number of rotates per animation - currently 10 -
+      # and reasonable timeout duration
+
+      numSkews = 10
+      percentageIncrement = 1 / numSkews
+
       setTimeout =>
         if $(@$elem).attr("data-skew-percent")?
           percent = parseFloat($(@$elem).attr("data-skew-percent"))
         else
-          percent = 0.1
+          percent = percentageIncrement
 
         @skew skewX, skewY, percent
 
         if percent < 1
-          $(@$elem).attr("data-skew-percent", percent + 0.1)
+          $(@$elem).attr("data-skew-percent", percent + percentageIncrement)
           @skewInPlace skewX, skewY, duration
         else
-          $(@$elem).attr("data-skew-percent", '.1')
+          $(@$elem).attr("data-skew-percent", "#{percentageIncrement}")
       , duration / 20, true
 
     animate: (callback) ->
@@ -78,7 +152,8 @@
       delete @animation.skewX
       delete @animation.skewY
 
-      options = { duration: @duration, easing: @easing, step : @stepFunction}
+      options = { duration: @duration, step : @stepFunction}
+      #console?.log "animating: #{JSON.stringify(@animation)}" if debugMode
 
       $(@$elem).delay(@delay).animate(@animation, options)
 
@@ -151,7 +226,7 @@
           catch error
             console?.log "rotate error: #{error.message}"
         else
-          @.setAttribute "style", "position:absolute; -moz-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -webkit-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -o-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0);"
+          @.setAttribute "style", "position:absolute; -moz-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -webkit-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -o-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0);"
 
         $(@).css('left', beforeLeft)
         $(@).css('top', beforeTop)
@@ -189,7 +264,7 @@
           catch error
             console?.log "rotate error: #{error.message}" if debugMode
       else
-        oObj.setAttribute "style", "position:absolute; -moz-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -webkit-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -o-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0);"
+        oObj.setAttribute "style", "position:absolute; -moz-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -webkit-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -o-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0);"
 
       distanceHeight = Math.min($(oObj).parent().outerWidth(), $(oObj).parent().outerHeight()) / 2
 
@@ -213,7 +288,7 @@
       @easing = if @animation.easing? then @animation.easing else "linear"
       @delay = if @animation.delay? then @animation.delay else 0
       @animation = @reject @animation, "duration", "easing", "delay"
-      $.addEasing @easing if @easing.search 'cubic-bezier' isnt -1
+      #$.addEasing @easing if @easing.search 'cubic-bezier' isnt -1
 
       transformations = {}
       transformations[key] = val for key, val of @animation when key in @transformationsList
@@ -255,6 +330,7 @@
 
       transforms = @convertRelativeUnits transforms
 
+      # Store transform poperties for relative-based animations
       if $(@$elem).attr("data-rotation")? and transforms.rotate?
         transforms.rotate = parseInt($(@$elem).attr("data-rotation")) + parseInt(transforms.rotate)
 
@@ -264,14 +340,30 @@
       if $(@$elem).attr("data-skewY")? and transforms.skewY?
         transforms.skewY = parseInt($(@$elem).attr("data-skewY")) + parseInt(transforms.skewY)
 
-      animations = {}
-      boxModel[key] = parseInt(val) for key, val of boxModel when typeof(val) is "string"
-
       if transforms.translate?
         pieces = String(transforms.translate).split ','
         if pieces.length is 2
           transforms.x = pieces[0]
           transforms.y = pieces[1]
+
+      if transforms.x?
+        if $(@$elem).attr("data-x-translation")?
+          previousXTranslation = parseInt($(@$elem).attr("data-x-translation"))
+          $(@$elem).attr("data-x-translation", parseInt(transforms.x))
+          transforms.x = parseInt(transforms.x) - previousXTranslation
+        else
+          $(@$elem).attr("data-x-translation", parseInt(transforms.x))
+
+      if transforms.y?
+        if $(@$elem).attr("data-y-translation")?
+          previousYTranslation = parseInt($(@$elem).attr("data-y-translation"))
+          $(@$elem).attr("data-y-translation", parseInt(transforms.y))
+          transforms.y = parseInt(transforms.y) - previousYTranslation
+        else
+          $(@$elem).attr("data-y-translation", parseInt(transforms.y))
+
+      animations = {}
+      boxModel[key] = parseInt(val) for key, val of boxModel when typeof(val) is "string"
 
       transforms[key] = parseInt(val) for key, val of transforms when typeof(val) is "string"
 
@@ -287,8 +379,8 @@
 
       if transforms.scale isnt 1 and ($(@$elem).attr("data-scale-width")? and $(@$elem).attr("data-scale-height")?)
         $(@$elem).attr
-          "data-scale-width"   : boxModel.width
-          "data-scale-height"  : boxModel.height
+          "data-scale-width" : boxModel.width
+          "data-scale-height" : boxModel.height
 
       if $(@$elem).attr("data-scale-width")? and $(@$elem).attr("data-scale-height")?
         boxModel.width = $(@$elem).attr("data-scale-width")
@@ -355,7 +447,11 @@
     else if easing?
       animation.easing = easing
 
-    $(@).css("filter": "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand')")
+    $(@).css
+        "filter": "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand')"
+    if $(@).css("position") isnt "absolute"
+      $(@).css
+        "position": "relative"
 
     @each ->
 
