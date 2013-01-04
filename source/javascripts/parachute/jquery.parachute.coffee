@@ -25,7 +25,7 @@
       l = undefined
 
       # Return the cached function if it exists.
-      return fn if fn
+      return fn  if fn
 
       # Get the standard easing function if it's defined.
       if easing[str]
@@ -37,11 +37,11 @@
       else
         coords = str.match(/\d*\.?\d+/g)
         l = coords.length # Should be 4
-        coords[l] = parseFloat(coords[l]) while l--
+        coords[l] = parseFloat(coords[l])  while l--
 
       fn = makeBezier.apply(this, coords)
       $.easing[str] = fn
-      $.easing[name] = fn if name
+      $.easing[name] = fn  if name
       fn
 
     makeBezier = (x1, y1, x2, y2) ->
@@ -76,6 +76,7 @@
 
     init: (@animation, @$elem, @callback) ->
       self = @
+      console?.log @ if debugMode
       @translateAnimation ->
         self.animate ->
           if typeof callback is 'function'
@@ -152,7 +153,7 @@
       delete @animation.skewX
       delete @animation.skewY
 
-      options = { duration: @duration, step : @stepFunction}
+      options = { duration: @duration, step : @stepFunction, complete: callback}
       #console?.log "animating: #{JSON.stringify(@animation)}" if debugMode
 
       $(@$elem).delay(@delay).animate(@animation, options)
@@ -166,8 +167,6 @@
           @skewInPlace skewX, skewY, @duration
         else if skewX isnt 0
           @skewInPlace skewX, skewY, @duration
-
-      callback?()
 
     # TODO: best determine if only transforms are being animated
     hasOnlyTransforms: (obj, props) ->
@@ -226,7 +225,7 @@
           catch error
             console?.log "rotate error: #{error.message}"
         else
-          @.setAttribute "style", "position:absolute; -moz-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -webkit-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -o-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0);"
+          @.setAttribute "style", "position:absolute; -moz-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -webkit-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -o-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0);"
 
         $(@).css('left', beforeLeft)
         $(@).css('top', beforeTop)
@@ -264,7 +263,7 @@
           catch error
             console?.log "rotate error: #{error.message}" if debugMode
       else
-        oObj.setAttribute "style", "position:absolute; -moz-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -webkit-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -o-transform: matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0);"
+        oObj.setAttribute "style", "position:absolute; -moz-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -webkit-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0); -o-transform:  matrix(" + a + ", " + b + ", " + c + ", " + d + ", 0, 0);"
 
       distanceHeight = Math.min($(oObj).parent().outerWidth(), $(oObj).parent().outerHeight()) / 2
 
@@ -379,8 +378,8 @@
 
       if transforms.scale isnt 1 and ($(@$elem).attr("data-scale-width")? and $(@$elem).attr("data-scale-height")?)
         $(@$elem).attr
-          "data-scale-width" : boxModel.width
-          "data-scale-height" : boxModel.height
+          "data-scale-width"   : boxModel.width
+          "data-scale-height"  : boxModel.height
 
       if $(@$elem).attr("data-scale-width")? and $(@$elem).attr("data-scale-height")?
         boxModel.width = $(@$elem).attr("data-scale-width")
@@ -433,6 +432,7 @@
       result
 
   $.fn.parachute = (animation, duration, easing, callback) ->
+
     self = @
 
     if typeof duration is "function"
@@ -447,13 +447,10 @@
     else if easing?
       animation.easing = easing
 
-    $(@).css
-        "filter": "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand')"
     if $(@).css("position") isnt "absolute"
       $(@).css
         "position": "relative"
 
     @each ->
-
       jQueryParachute = new jQueryParachuteObject()
       jQueryParachute.init animation, this, callback
