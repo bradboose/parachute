@@ -1,9 +1,4 @@
 (->
-
-  # Delegate .transition() calls to .animate()
-  # if the browser can't do CSS transitions.
-  $.fn.transition = $.fn.parachute
-
   i = 0
 
   $("article button").live "click", (e) ->
