@@ -1,6 +1,6 @@
 ((factory) ->
   if typeof define is "function" and define.amd
-    define ["jquery"], factory
+    define ["jquery", "transit"], factory
   else
     factory(jQuery)
 ) ($) ->
@@ -74,14 +74,13 @@
       @boxModelList = ["top","right","bottom","left","margin-top","margin-right","margin-bottom","margin-left","padding-top","padding-right","padding-bottom","padding-left","width","height"]
       @transformationsList = ["x","y","translate","rotate","rotateX","rotateY","rotate3d","scale","perspective","skewX","skewY","opacity"]
 
-    init: (@animation, @$elem, @callback) ->
-      self = @
+    init: (@animation, @$elem, callback) ->
       console?.log @ if debugMode
-      @translateAnimation ->
-        self.animate ->
+      @translateAnimation =>
+        @animate =>
           if typeof callback is 'function'
-            callback?.apply? $elem
-          self
+            callback?.apply? @$elem
+          this
 
     rotateInPlace: (degree, duration) ->
 
@@ -454,3 +453,5 @@
     @each ->
       jQueryParachute = new jQueryParachuteObject()
       jQueryParachute.init animation, this, callback
+
+  $.fn.transition = $.fn.parachute if !$.support.transition
