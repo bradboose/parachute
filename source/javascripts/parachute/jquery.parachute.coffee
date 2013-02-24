@@ -270,6 +270,12 @@
       $(oObj).css('left', (costheta * distanceHeight / 2) - (parseInt($(oObj).outerWidth()) / 2) + beforeLeft)
 
 
+    # Skews the current element via css
+    #
+    # @param  [degreesX] the degrees to skew in the X direction
+    # @param  [degreesY] the degrees to skew in the Y direction
+    # @param  [percent] the percentage to skew the element (defaults to 1)
+    #
     skew: (degreesX, degreesY, percent = 1)->
 
       beforeLeft = $(@$elem).css('left')
@@ -296,6 +302,12 @@
 
       callback?()
 
+    # Returns the element's current box model containing
+    # values specified in @boxModelList
+    #
+    # @param  [elem] the element
+    # @return [Object] The current box of the element
+    #
     getElementBoxModel: (elem) ->
       boxModel = {}
       elem = elem[0] if elem.length?
@@ -309,6 +321,13 @@
 
       boxModel
 
+    # Returns the style of the element and key
+    # values specified in @boxModelList
+    #
+    # @param  [elem] the element
+    # @param  [key] the style to return
+    # @return [String] the element style
+    #
     getStyle = (elem, key) ->
       $(elem).css(key)
 
@@ -324,6 +343,12 @@
 
       transforms
 
+    # Translates the CSS3 transformations into CSS2-style animations and css
+    #
+    # @param  [Object] the current boxModel of the element
+    # @param  [Object] the CSS3 transforms to be applied to the element
+    # @return [Object] the translated animations
+    #
     translateTransforms: (boxModel, transforms) ->
 
       transforms = @convertRelativeUnits transforms
@@ -423,6 +448,11 @@
         iHaz = true if obj.hasOwnProperty(prop)
       iHaz
 
+    # Removes unwanted properties in the rejectList from the input object
+    #
+    # @param  [Object] the object to remove properties from
+    # @param  [String []] property keys to be removed from the object
+    #
     reject: (obj, rejectList...) ->
       result = {}
       for key, val of obj
